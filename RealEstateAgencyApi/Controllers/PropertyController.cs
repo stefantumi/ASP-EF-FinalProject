@@ -5,29 +5,27 @@ using RealEstateAgencyApi.Models;
 namespace RealEstateAgencyApi.Controllers;
 
 [ApiController]
-[Route("api/agency")]
-public class AgencyController : Controller
+[Route("api/property")]
+public class PropertyController : Controller
 {
+
     private readonly IRepository _repository;
 
-    public AgencyController(IRepository repository)
+    public PropertyController(IRepository repository)
     {
         _repository = repository;
     }
 
     [HttpGet]
-    public List<Agency> GetAllAgencies()
+    public List<Property> GetAllProperties()
     {
-        return _repository.GetAllAgencies();
+        return _repository.GetAllProperties();
     }
 
     [HttpGet]
     [Route("{id:int}")]
-    public Agency GetAgencyById(int id)
+    public Property GetPropertyById(int id)
     {
-        return _repository.GetAgencyById(id: id);
+        return _repository.GetPropertyById(id: id);
     }
-    
-    
-    
 }

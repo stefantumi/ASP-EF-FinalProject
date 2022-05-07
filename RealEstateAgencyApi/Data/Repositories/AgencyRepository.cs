@@ -11,7 +11,8 @@ public class AgencyRepository : IRepository
     {
         _dbContext = new AgencyContext();
     }
-    
+
+    /*BEGIN AGENCY GET*/
     public List<Agency> GetAllAgencies()
     {
         return _dbContext.Agencies.ToList();
@@ -21,7 +22,8 @@ public class AgencyRepository : IRepository
     {
         return _dbContext.Agencies.FirstOrDefault(x => x.Id == id)!;
     }
-
+    /*END AGENCY GET*/
+    
     public List<Property> GetAllProperties()
     {
         return _dbContext.Properties.ToList();
