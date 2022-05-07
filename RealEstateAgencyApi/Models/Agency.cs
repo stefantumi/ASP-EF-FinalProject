@@ -1,0 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace RealEstateAgencyApi.Models;
+
+public class Agency
+{
+    [Required]
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public List<Property> Properties { get; } = new();
+    public List<Agent> Agents { get; } = new();
+}
