@@ -4,9 +4,9 @@ using RealEstateAgencyApi.Models;
 
 namespace RealEstateAgencyApi.Controllers;
 
-[ApiController]
+[Controller]
 [Route("api/agent")]
-public class AgentController : Controller
+public class AgentController : ControllerBase
 {
 
     private readonly IRepository _repository;

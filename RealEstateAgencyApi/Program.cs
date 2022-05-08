@@ -27,3 +27,15 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+/*
+ * sudo docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=StefanTumi.7" \
+   -p 1433:1433 --name Agencies --hostname Agencies \
+   -d mcr.microsoft.com/mssql/server:2019-latest
+
+
+   sudo docker exec -it sql1 /opt/mssql-tools/bin/sqlcmd \
+-S localhost -U SA \
+ -P "$(read -sp "Enter current SA password: "; echo "${REPLY}")" \
+ -Q "ALTER LOGIN SA WITH PASSWORD=\"$(read -sp "Enter new SA password: "; echo "${REPLY}")\""
+ */

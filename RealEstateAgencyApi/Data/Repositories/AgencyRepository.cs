@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using RealEstateAgencyApi.Data.Interfaces;
 using RealEstateAgencyApi.Models;
 
@@ -12,35 +13,96 @@ public class AgencyRepository : IRepository
         _dbContext = new AgencyContext();
     }
 
-    /*BEGIN AGENCY GET*/
+
+    public async Task CreateAgency(Agency newAgency)
+    {
+        await using var db = _dbContext;
+        await db.Agencies.AddAsync(newAgency);
+        await db.SaveChangesAsync();
+    }
+
     public List<Agency> GetAllAgencies()
     {
-        return _dbContext.Agencies.ToList();
+        using var db = _dbContext;
+        return db.Agencies.ToList();
     }
 
-    public Agency GetAgencyById(int id)
+    public Agency GetAgencyById(int agencyId)
     {
-        return _dbContext.Agencies.FirstOrDefault(x => x.Id == id)!;
+        using var db = _dbContext;
+        return db.Agencies.FirstOrDefault(x => x.Id == agencyId)!;
     }
-    /*END AGENCY GET*/
     
+    public Agency? UpdateAgency(int oldAgencyId, Agency newAgency)
+    {
+        using var db = _dbContext;
+        var agencyToUpdate = db.Agencies.FirstOrDefault(x => x.Id == oldAgencyId);
+        
+        if (agencyToUpdate == null)
+        {
+            return null;
+        }
+
+        agencyToUpdate.Id = newAgency.Id;
+        agencyToUpdate.Agents = newAgency.Agents;
+        agencyToUpdate.Name = newAgency.Name;
+        agencyToUpdate.Properties = newAgency.Properties;
+
+        return agencyToUpdate;
+    }
+
+    public Task<IActionResult> DeleteAgencyById(int deleteAgencyId)
+    {
+        
+    }
+
+    public Task AddProperty(Property propertyToAdd)
+    {
+        throw new NotImplementedException();
+    }
+
     public List<Property> GetAllProperties()
     {
-        return _dbContext.Properties.ToList();
+        throw new NotImplementedException();
     }
 
-    public Property GetPropertyById(int id)
+    public Property GetPropertyById(int propertyId)
     {
-        return _dbContext.Properties.FirstOrDefault(x => x.Id == id)!;
+        throw new NotImplementedException();
+    }
+
+    public Task<IActionResult> UpdateProperty(Property oldProperty, Property newProperty)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IActionResult> DeletePropertyById(int deletePropertyId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task CreateAgent(Agent newAgent)
+    {
+        throw new NotImplementedException();
     }
 
     public List<Agent> GetAllAgents()
     {
-        return _dbContext.Agents.ToList();
+        throw new NotImplementedException();
     }
 
-    public Agent GetAgentById(int id)
+    public Agent GetAgentById(int agentId)
     {
-        return _dbContext.Agents.FirstOrDefault(x => x.Id == id)!;
+        throw new NotImplementedException();
+    }
+
+    public Task<IActionResult> UpdateAgent(Agent oldAgent, Agent newAgent)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DeleteAgentById(int deleteAgentId)
+    {
+        throw new NotImplementedException();
     }
 }
