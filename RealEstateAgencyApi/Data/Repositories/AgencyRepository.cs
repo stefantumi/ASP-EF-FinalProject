@@ -51,9 +51,14 @@ public class AgencyRepository : IRepository
         return agencyToUpdate;
     }
 
-    public Task<IActionResult> DeleteAgencyById(int deleteAgencyId)
+    public async Task<Agency>? DeleteAgencyById(int deleteAgencyId)
     {
-        
+        await using var db = _dbContext;
+        var removeEntity = db.Agencies.FirstOrDefault(x => x.Id == deleteAgencyId);
+        if (removeEntity == null) return null;
+        db.Agencies.Remove(removeEntity);
+        await db.SaveChangesAsync();
+        return removeEntity;
     }
 
     public Task AddProperty(Property propertyToAdd)

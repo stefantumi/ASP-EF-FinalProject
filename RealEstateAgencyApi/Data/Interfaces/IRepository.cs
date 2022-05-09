@@ -15,7 +15,7 @@ public interface IRepository
     /// UPDATE
     public Agency? UpdateAgency(Agency oldAgency, Agency newAgency);
     /// DELETE
-    public Task<IActionResult> DeleteAgencyById(int deleteAgencyId);
+    public Task<Agency> DeleteAgencyById(int deleteAgencyId);
     
     
     
