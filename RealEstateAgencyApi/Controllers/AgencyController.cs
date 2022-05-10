@@ -15,16 +15,85 @@ public class AgencyController : ControllerBase
         _repository = repository;
     }
 
-    [HttpGet]
-    public List<Agency> GetAllAgencies()
+    [HttpPost]
+    public async Task<IActionResult> CreateAgency([FromBody]Agency newAgency)
     {
-        return _repository.GetAllAgencies();
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                //TODO: fix this
+                await _repository.CreateAgencyAsync(newAgency);
+                return CreatedAtAction(nameof(GetAgencyByIdAsync), new { id = newAgency.Id }, newAgency);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
+        }
     }
 
+    
+    [HttpGet]
+    public async Task<ActionResult<List<Agency>>> GetAllAgenciesAsync()
+    {
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                List<Agency> agencies = await _repository.GetAllAgenciesAsync();
+                return Ok(agencies);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
+        }
+    }
+
+    
     [HttpGet]
     [Route("{id:int}")]
-    public Agency GetAgencyById(int id)
+    public async Task<ActionResult<Agency>> GetAgencyByIdAsync(int id)
     {
-        return _repository.GetAgencyById(id: id);
+        try
+        {
+            var agency = await _repository.GetAgencyByIdAsync(id);
+            
+            if (agency == null)
+            {
+                return NotFound();
+            }
+            
+            return Ok(agency);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
+        }
+    }
+
+    
+    [HttpPut]
+    public async Task<IActionResult> UpdateAgency(int oldAgencyId, Agency newAgency)
+    {
+        var original = await _repository.GetAgencyByIdAsync(oldAgencyId);
+        try
+        {
+
+
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
+        }
     }
 }

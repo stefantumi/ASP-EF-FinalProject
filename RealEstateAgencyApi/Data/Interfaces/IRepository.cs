@@ -8,27 +8,27 @@ public interface IRepository
     
     /// Agency
     /// CREATE
-    public Task CreateAgency(Agency newAgency);
+    public Task CreateAgencyAsync(Agency newAgency);
     /// READ
-    public List<Agency> GetAllAgencies();
-    public Agency GetAgencyById(int agencyId);
+    public Task<List<Agency>> GetAllAgenciesAsync();
+    public Task<Agency?> GetAgencyByIdAsync(int agencyId);
     /// UPDATE
-    public Agency? UpdateAgency(Agency oldAgency, Agency newAgency);
+    public Agency? UpdateAgency(int oldAgencyId, Agency newAgency);
     /// DELETE
-    public Task<Agency> DeleteAgencyById(int deleteAgencyId);
+    public Task DeleteAgencyById(int deleteAgencyId);
     
     
     
     /// PROPERTY
     /// CREATE
-    public Task AddProperty(Property propertyToAdd);
+    public Task CreateProperty(Property newProperty);
     /// READ
     public List<Property> GetAllProperties();
     public Property GetPropertyById(int propertyId);
     /// UPDATE
-    public Task<IActionResult> UpdateProperty(Property oldProperty,Property newProperty);
+    public Task UpdateProperty(Property oldProperty, Property newProperty);
     /// DELETE
-    public Task<IActionResult> DeletePropertyById(int deletePropertyId);
+    public Task DeletePropertyById(int deletePropertyId);
 
 
 
@@ -40,7 +40,7 @@ public interface IRepository
     public Agent GetAgentById(int agentId);
 
     /// UPDATE
-    public Task<IActionResult> UpdateAgent(Agent oldAgent, Agent newAgent);
+    public Task UpdateAgent(int oldAgentId, Agent newAgent);
     /// DELETE
-    public void DeleteAgentById(int deleteAgentId);
+    public Task DeleteAgentById(int deleteAgentId);
 }

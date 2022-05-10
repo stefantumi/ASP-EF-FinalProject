@@ -8,5 +8,5 @@ public class Agent
     public string SSID { get; set; }
 
 
-    public List<Property> Property { get; } = new();
+    public List<Property> Property { get; set; } = new();
 }

@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RealEstateAgencyApi.Data.Interfaces;
 using RealEstateAgencyApi.Models;
 
@@ -7,32 +7,32 @@ namespace RealEstateAgencyApi.Data.Repositories;
 public class AgencyRepository : IRepository
 {
     private readonly AgencyContext _dbContext;
-
     public AgencyRepository()
     {
         _dbContext = new AgencyContext();
     }
-
-
-    public async Task CreateAgency(Agency newAgency)
+    
+    /// Agency Create
+    public async Task CreateAgencyAsync(Agency newAgency)
     {
         await using var db = _dbContext;
         await db.Agencies.AddAsync(newAgency);
         await db.SaveChangesAsync();
     }
-
-    public List<Agency> GetAllAgencies()
+    /// Agency Read
+    public async Task<List<Agency>> GetAllAgenciesAsync()
     {
-        using var db = _dbContext;
-        return db.Agencies.ToList();
+        await using var db = _dbContext;
+        return await db.Agencies.ToListAsync();
     }
-
-    public Agency GetAgencyById(int agencyId)
+    /// Agency Read
+    public async Task<Agency?> GetAgencyByIdAsync(int agencyId)
     {
-        using var db = _dbContext;
-        return db.Agencies.FirstOrDefault(x => x.Id == agencyId)!;
+        await using var db = _dbContext;
+        var agency = await db.Agencies.FirstOrDefaultAsync(x => x.Id == agencyId);
+        return agency;
     }
-    
+    /// Agency Update
     public Agency? UpdateAgency(int oldAgencyId, Agency newAgency)
     {
         using var db = _dbContext;
@@ -50,64 +50,96 @@ public class AgencyRepository : IRepository
 
         return agencyToUpdate;
     }
-
-    public async Task<Agency>? DeleteAgencyById(int deleteAgencyId)
+    /// Agency Delete
+    public async Task DeleteAgencyById(int deleteAgencyId)
     {
         await using var db = _dbContext;
         var removeEntity = db.Agencies.FirstOrDefault(x => x.Id == deleteAgencyId);
-        if (removeEntity == null) return null;
         db.Agencies.Remove(removeEntity);
         await db.SaveChangesAsync();
-        return removeEntity;
     }
+    
+    
 
-    public Task AddProperty(Property propertyToAdd)
+    /// Property Create
+    public async Task CreateProperty(Property newProperty)
     {
-        throw new NotImplementedException();
+        await using var db = _dbContext;
+        await db.Properties.AddAsync(newProperty);
+        await db.SaveChangesAsync();
     }
-
+    /// Property Read
     public List<Property> GetAllProperties()
     {
-        throw new NotImplementedException();
+        using var db = _dbContext;
+        return db.Properties.ToList();
     }
-
+    /// Property Read
     public Property GetPropertyById(int propertyId)
     {
-        throw new NotImplementedException();
+        using var db = _dbContext;
+        return db.Properties.FirstOrDefault(x => x.Id == propertyId)!;
     }
-
-    public Task<IActionResult> UpdateProperty(Property oldProperty, Property newProperty)
+    /// Property Update
+    public async Task UpdateProperty(Property oldProperty, Property newProperty)
     {
-        throw new NotImplementedException();
+        await using var db = _dbContext;
+        var orginal = await db.Properties.FirstOrDefaultAsync(x => x == oldProperty);
+        orginal.Id = newProperty.Id;
+        orginal.Address = newProperty.Address;
+        orginal.Size = newProperty.Size;
+        orginal.Price = newProperty.Price;
+        orginal.Owner = newProperty.Owner;
+        orginal.Agency = newProperty.Agency;
+        await db.SaveChangesAsync();
     }
-
-    public Task<IActionResult> DeletePropertyById(int deletePropertyId)
+    /// Property Delete
+    public async Task DeletePropertyById(int deletePropertyId)
     {
-        throw new NotImplementedException();
+        await using var db = _dbContext;
+        var propertyToBeRemoved = await db.Properties.FirstOrDefaultAsync(x => x.Id == deletePropertyId);
+        db.Properties.Remove(propertyToBeRemoved);
+        await db.SaveChangesAsync();
     }
 
-    public Task CreateAgent(Agent newAgent)
+    
+    
+    /// Agent Create
+    public async Task CreateAgent(Agent newAgent)
     {
-        throw new NotImplementedException();
+        using var db = _dbContext;
+        await db.Agents.AddAsync(newAgent);
     }
-
+    /// Agent Read
     public List<Agent> GetAllAgents()
     {
-        throw new NotImplementedException();
+        using var db = _dbContext;
+        return db.Agents.ToList();
     }
-
+    /// Agent Read
     public Agent GetAgentById(int agentId)
     {
-        throw new NotImplementedException();
+        using var db = _dbContext;
+        return db.Agents.FirstOrDefault(x => x.Id == agentId)!;
     }
-
-    public Task<IActionResult> UpdateAgent(Agent oldAgent, Agent newAgent)
+    /// Agent Update
+    public async Task UpdateAgent(int oldAgentId, Agent newAgent)
     {
-        throw new NotImplementedException();
+        await using var db = _dbContext;
+        var orginal = await db.Agents.FirstOrDefaultAsync(x => x.Id == newAgent.Id)!;
+        orginal.Id = newAgent.Id;
+        orginal.FirstName = newAgent.FirstName; 
+        orginal.LastName = newAgent.LastName;
+        orginal.SSID = newAgent.SSID;
+        orginal.Property = newAgent.Property;
+        await db.SaveChangesAsync();
     }
-
-    public void DeleteAgentById(int deleteAgentId)
+    /// Agent Delete
+    public async Task DeleteAgentById(int deleteAgentId)
     {
-        throw new NotImplementedException();
+        using var db = _dbContext;
+        var toDelete = await db.Agents.FirstOrDefaultAsync(x => x.Id == deleteAgentId);
+        db.Agents.Remove(toDelete);
+        await db.SaveChangesAsync();
     }
 }
