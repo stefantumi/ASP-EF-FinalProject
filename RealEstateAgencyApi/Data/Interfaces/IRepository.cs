@@ -15,7 +15,7 @@ public interface IRepository
     /// UPDATE
     public Agency? UpdateAgency(int oldAgencyId, Agency newAgency);
     /// DELETE
-    public Task DeleteAgencyById(int deleteAgencyId);
+    public Task DeleteAgencyByIdAsync(int deleteAgencyId);
     
     
     
@@ -34,10 +34,10 @@ public interface IRepository
 
     /// AGENT
     /// CREATE
-    public Task CreateAgent(Agent newAgent);
+    public Task CreateAgentAsync(Agent newAgent);
     /// READ
-    public List<Agent> GetAllAgents();
-    public Agent GetAgentById(int agentId);
+    public Task<List<Agent>> GetAllAgentsAsync();
+    public Task<Agent> GetAgentByIdAsync(int agentId);
 
     /// UPDATE
     public Task UpdateAgent(int oldAgentId, Agent newAgent);

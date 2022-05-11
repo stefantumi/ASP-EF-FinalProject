@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RealEstateAgencyApi.Data.Interfaces;
 using RealEstateAgencyApi.Models;
@@ -51,7 +52,7 @@ public class AgencyRepository : IRepository
         return agencyToUpdate;
     }
     /// Agency Delete
-    public async Task DeleteAgencyById(int deleteAgencyId)
+    public async Task DeleteAgencyByIdAsync(int deleteAgencyId)
     {
         await using var db = _dbContext;
         var removeEntity = db.Agencies.FirstOrDefault(x => x.Id == deleteAgencyId);
@@ -105,22 +106,25 @@ public class AgencyRepository : IRepository
     
     
     /// Agent Create
-    public async Task CreateAgent(Agent newAgent)
+    public async Task CreateAgentAsync(Agent newAgent)
     {
-        using var db = _dbContext;
+        await using var db = _dbContext;
         await db.Agents.AddAsync(newAgent);
     }
+
+
     /// Agent Read
-    public List<Agent> GetAllAgents()
+    public async Task<List<Agent>> GetAllAgentsAsync()
     {
-        using var db = _dbContext;
-        return db.Agents.ToList();
+        await using var db = _dbContext;
+        return await db.Agents.ToListAsync();
     }
     /// Agent Read
-    public Agent GetAgentById(int agentId)
+    public async Task<Agent> GetAgentByIdAsync(int agentId)
     {
-        using var db = _dbContext;
-        return db.Agents.FirstOrDefault(x => x.Id == agentId)!;
+        await using var db = _dbContext;
+        var agent = await db.Agents.FirstOrDefaultAsync(x => x.Id == agentId);
+        return agent;
     }
     /// Agent Update
     public async Task UpdateAgent(int oldAgentId, Agent newAgent)

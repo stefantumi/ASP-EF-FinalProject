@@ -16,15 +16,15 @@ public class AgencyController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAgency([FromBody]Agency newAgency)
+    public async Task<ActionResult> CreateAgency([FromBody]Agency newAgency)
     {
+        
         try
         {
             if (ModelState.IsValid)
             {
-                //TODO: fix this
                 await _repository.CreateAgencyAsync(newAgency);
-                return CreatedAtAction(nameof(GetAgencyByIdAsync), new { id = newAgency.Id }, newAgency);
+                return CreatedAtAction(nameof(GetAgencyById), new { id = newAgency.Id }, newAgency);
             }
             else
             {
@@ -39,13 +39,14 @@ public class AgencyController : ControllerBase
 
     
     [HttpGet]
-    public async Task<ActionResult<List<Agency>>> GetAllAgenciesAsync()
+    public async Task<ActionResult<List<Agency>>> GetAllAgencies()
     {
+        List<Agency> agencies = await _repository.GetAllAgenciesAsync();
         try
         {
             if (ModelState.IsValid)
             {
-                List<Agency> agencies = await _repository.GetAllAgenciesAsync();
+                
                 return Ok(agencies);
             }
             else
@@ -62,7 +63,7 @@ public class AgencyController : ControllerBase
     
     [HttpGet]
     [Route("{id:int}")]
-    public async Task<ActionResult<Agency>> GetAgencyByIdAsync(int id)
+    public async Task<ActionResult<Agency>> GetAgencyById(int id)
     {
         try
         {
@@ -88,8 +89,32 @@ public class AgencyController : ControllerBase
         var original = await _repository.GetAgencyByIdAsync(oldAgencyId);
         try
         {
+            if (original == null)
+            {
+                return NotFound();
+            }
 
+            return CreatedAtAction(nameof(GetAgencyById), new { id = newAgency.Id }, newAgency);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
+        }
+    }
 
+    [HttpDelete]
+    public async Task<ActionResult> DeleteAgencyById(int deleteAgencyId)
+    {
+        var exists = await _repository.GetAgencyByIdAsync(deleteAgencyId);
+        try
+        {
+            if (exists == null)
+            {
+                return NotFound();
+            }
+            // TODO: should anything be returned ? if so, is this correct ? 
+            await _repository.DeleteAgencyByIdAsync(deleteAgencyId);
+            return Ok(exists);
         }
         catch (Exception)
         {
