@@ -8,7 +8,7 @@ namespace RealEstateAgencyApi.Controllers;
 [Route("api/agent")]
 public class AgentController : ControllerBase
 {
-private readonly IRepository _repository;
+    private readonly IRepository _repository;
 
     public AgentController(IRepository repository)
     {
@@ -28,7 +28,7 @@ private readonly IRepository _repository;
             }
             else
             {
-                return NotFound();
+                return NotFound(ModelState);
             }
         }
         catch (Exception)
@@ -41,7 +41,7 @@ private readonly IRepository _repository;
     [HttpGet]
     public async Task<ActionResult<List<Agent>>> GetAllAgents()
     {
-        List<Agent> agents = await _repository.GetAllAgentsAsync();
+        var agents = await _repository.GetAllAgentsAsync();
         try
         {
             if (ModelState.IsValid)
@@ -62,7 +62,7 @@ private readonly IRepository _repository;
     
     [HttpGet]
     [Route("{id:int}")]
-    public async Task<ActionResult<Agent>> GetAgentById(int id)
+    public async Task<ActionResult<Agent?>> GetAgentById(int id)
     {
         try
         {
@@ -83,9 +83,10 @@ private readonly IRepository _repository;
 
     
     [HttpPut]
-    public async Task<IActionResult> UpdateAgency(int oldAgencyId, Agency newAgency)
+    [Route("{oldAgentId:int}")]
+    public async Task<IActionResult> UpdateAgent(int oldAgentId, Agent newAgent)
     {
-        var original = await _repository.GetAgencyByIdAsync(oldAgencyId);
+        var original = await _repository.GetAgentByIdAsync(oldAgentId);
         try
         {
             if (original == null)
@@ -93,7 +94,7 @@ private readonly IRepository _repository;
                 return NotFound();
             }
 
-            return CreatedAtAction(nameof(GetAgencyById), new { id = newAgency.Id }, newAgency);
+            return CreatedAtAction(nameof(GetAgentById), new { id = newAgent.Id }, newAgent);
         }
         catch (Exception)
         {
@@ -102,9 +103,10 @@ private readonly IRepository _repository;
     }
 
     [HttpDelete]
-    public async Task<ActionResult> DeleteAgencyById(int deleteAgencyId)
+    [Route("{deleteAgentId:int}")]
+    public async Task<ActionResult> DeleteAgentById(int deleteAgentId)
     {
-        var exists = await _repository.GetAgencyByIdAsync(deleteAgencyId);
+        var exists = await _repository.GetAgentByIdAsync(deleteAgentId);
         try
         {
             if (exists == null)
@@ -112,7 +114,7 @@ private readonly IRepository _repository;
                 return NotFound();
             }
             // TODO: should anything be returned ? if so, is this correct ? 
-            await _repository.DeleteAgencyByIdAsync(deleteAgencyId);
+            await _repository.DeleteAgentByIdAsync(deleteAgentId);
             return Ok(exists);
         }
         catch (Exception)

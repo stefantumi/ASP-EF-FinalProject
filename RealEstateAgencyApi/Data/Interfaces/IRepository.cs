@@ -21,10 +21,10 @@ public interface IRepository
     
     /// PROPERTY
     /// CREATE
-    public Task CreateProperty(Property newProperty);
+    public Task CreatePropertyAsync(Property newProperty);
     /// READ
-    public List<Property> GetAllProperties();
-    public Property GetPropertyById(int propertyId);
+    public Task<List<Property>> GetAllPropertiesAsync();
+    public Task<Property?> GetPropertyByIdAsync(int propertyId);
     /// UPDATE
     public Task UpdateProperty(Property oldProperty, Property newProperty);
     /// DELETE
@@ -37,10 +37,10 @@ public interface IRepository
     public Task CreateAgentAsync(Agent newAgent);
     /// READ
     public Task<List<Agent>> GetAllAgentsAsync();
-    public Task<Agent> GetAgentByIdAsync(int agentId);
+    public Task<Agent?> GetAgentByIdAsync(int agentId);
 
     /// UPDATE
     public Task UpdateAgent(int oldAgentId, Agent newAgent);
     /// DELETE
-    public Task DeleteAgentById(int deleteAgentId);
+    public Task DeleteAgentByIdAsync(int deleteAgentId);
 }

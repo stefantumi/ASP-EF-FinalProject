@@ -84,6 +84,7 @@ public class AgencyController : ControllerBase
 
     
     [HttpPut]
+    [Route("{oldAgencyId:int}")]
     public async Task<IActionResult> UpdateAgency(int oldAgencyId, Agency newAgency)
     {
         var original = await _repository.GetAgencyByIdAsync(oldAgencyId);
@@ -103,6 +104,7 @@ public class AgencyController : ControllerBase
     }
 
     [HttpDelete]
+    [Route("{deleteAgencyId:int}")]
     public async Task<ActionResult> DeleteAgencyById(int deleteAgencyId)
     {
         var exists = await _repository.GetAgencyByIdAsync(deleteAgencyId);
