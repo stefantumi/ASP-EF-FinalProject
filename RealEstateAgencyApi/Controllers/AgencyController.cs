@@ -5,7 +5,7 @@ using RealEstateAgencyApi.Models;
 namespace RealEstateAgencyApi.Controllers;
 
 [Controller]
-[Route("api/agency")]
+[Microsoft.AspNetCore.Mvc.Route("api/agency")]
 public class AgencyController : ControllerBase
 {
     private readonly IRepository _repository;
@@ -28,7 +28,8 @@ public class AgencyController : ControllerBase
             }
             else
             {
-                return NotFound();
+                // return NoContent(newAgency);
+                return NotFound(ModelState);
             }
         }
         catch (Exception)
@@ -37,7 +38,6 @@ public class AgencyController : ControllerBase
         }
     }
 
-    
     [HttpGet]
     public async Task<ActionResult<List<Agency>>> GetAllAgencies()
     {
@@ -59,7 +59,6 @@ public class AgencyController : ControllerBase
             return StatusCode(500);
         }
     }
-
     
     [HttpGet]
     [Route("{id:int}")]
@@ -82,20 +81,16 @@ public class AgencyController : ControllerBase
         }
     }
 
-    
     [HttpPut]
     [Route("{oldAgencyId:int}")]
-    public async Task<IActionResult> UpdateAgency(int oldAgencyId, Agency newAgency)
+    public async Task<IActionResult> UpdateAgency(int oldAgencyId, string newAgencyName)
     {
         var original = await _repository.GetAgencyByIdAsync(oldAgencyId);
+        if (original == null) return NotFound(original);
+        var updated = await _repository.UpdateAgency(oldAgencyId, newAgencyName);
         try
         {
-            if (original == null)
-            {
-                return NotFound();
-            }
-
-            return CreatedAtAction(nameof(GetAgencyById), new { id = newAgency.Id }, newAgency);
+            return CreatedAtAction(nameof(GetAgencyById), new { id = updated.Id }, updated);
         }
         catch (Exception)
         {
@@ -114,7 +109,6 @@ public class AgencyController : ControllerBase
             {
                 return NotFound();
             }
-            // TODO: should anything be returned ? if so, is this correct ? 
             await _repository.DeleteAgencyByIdAsync(deleteAgencyId);
             return Ok(exists);
         }

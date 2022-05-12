@@ -8,7 +8,7 @@ namespace RealEstateAgencyApi.Controllers;
 [Route("api/property")]
 public class PropertyController : ControllerBase
 {
-    private readonly IRepository _repository;
+    public IRepository _repository;
 
     public PropertyController(IRepository repository)
     {
@@ -35,7 +35,6 @@ public class PropertyController : ControllerBase
             return StatusCode(500);
         }
     }
-
     
     [HttpGet]
     public async Task<ActionResult<List<Property>>> GetAllProperties()
@@ -58,7 +57,6 @@ public class PropertyController : ControllerBase
         }
     }
 
-    
     [HttpGet]
     [Route("{id:int}")]
     public async Task<ActionResult<Property?>> GetPropertyById(int id)
@@ -80,20 +78,16 @@ public class PropertyController : ControllerBase
         }
     }
 
-    
     [HttpPut]
     [Route("{oldProperty:int}")]
-    public async Task<IActionResult> UpdateProperty(int oldProperty, Property newProperty)
+    public async Task<IActionResult> UpdateProperty(int oldPropertyId, Property newProperty)
     {
-        var original = await _repository.GetPropertyByIdAsync(oldProperty);
+        var original = await _repository.GetPropertyByIdAsync(oldPropertyId);
+        if (original == null) return NotFound(original); 
         try
         {
-            if (original == null)
-            {
-                return NotFound();
-            }
-
-            return CreatedAtAction(nameof(GetPropertyById), new { id = newProperty.Id }, newProperty);
+            var updated = await _repository.UpdateProperty(oldPropertyId, newProperty);
+            return CreatedAtAction(nameof(GetPropertyById), new { id = updated.Id }, updated);
         }
         catch (Exception)
         {

@@ -6,6 +6,6 @@ public class PropertyDTO
     public Address Address { get; set; }
     public double Size { get; set; }
 
-    public Contact Owner { get; set; }
+    public Owner Owner { get; set; }
     public List<Agency> Agency { get; set; }
 }

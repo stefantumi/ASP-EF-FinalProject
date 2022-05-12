@@ -8,11 +8,12 @@ namespace RealEstateAgencyApi.Controllers;
 [Route("api/agent")]
 public class AgentController : ControllerBase
 {
-    private readonly IRepository _repository;
+    public IRepository _repository;
 
     public AgentController(IRepository repository)
     {
         _repository = repository;
+        
     }
 
     [HttpPost]
@@ -37,7 +38,6 @@ public class AgentController : ControllerBase
         }
     }
 
-    
     [HttpGet]
     public async Task<ActionResult<List<Agent>>> GetAllAgents()
     {
@@ -59,7 +59,6 @@ public class AgentController : ControllerBase
         }
     }
 
-    
     [HttpGet]
     [Route("{id:int}")]
     public async Task<ActionResult<Agent?>> GetAgentById(int id)
@@ -81,20 +80,16 @@ public class AgentController : ControllerBase
         }
     }
 
-    
     [HttpPut]
     [Route("{oldAgentId:int}")]
     public async Task<IActionResult> UpdateAgent(int oldAgentId, Agent newAgent)
     {
         var original = await _repository.GetAgentByIdAsync(oldAgentId);
+        if (original == null) return NotFound(original);
         try
         {
-            if (original == null)
-            {
-                return NotFound();
-            }
-
-            return CreatedAtAction(nameof(GetAgentById), new { id = newAgent.Id }, newAgent);
+            var updated = await _repository.UpdateAgent(oldAgentId, newAgent);
+            return CreatedAtAction(nameof(GetAgentById), new { id = updated.Id }, updated);
         }
         catch (Exception)
         {

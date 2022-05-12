@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RealEstateAgencyApi.Data.Interfaces;
 using RealEstateAgencyApi.Models;
@@ -7,7 +6,7 @@ namespace RealEstateAgencyApi.Data.Repositories;
 
 public class AgencyRepository : IRepository
 {
-    private readonly AgencyContext _dbContext;
+    public AgencyContext _dbContext;
     public AgencyRepository()
     {
         _dbContext = new AgencyContext();
@@ -16,9 +15,10 @@ public class AgencyRepository : IRepository
     /// Agency Create
     public async Task CreateAgencyAsync(Agency newAgency)
     {
-        await using var db = _dbContext;
+        using var db = _dbContext;
         await db.Agencies.AddAsync(newAgency);
         await db.SaveChangesAsync();
+        
     }
     /// Agency Read
     public async Task<List<Agency>> GetAllAgenciesAsync()
@@ -34,77 +34,30 @@ public class AgencyRepository : IRepository
         return agency;
     }
     /// Agency Update
-    public Agency? UpdateAgency(int oldAgencyId, Agency newAgency)
+    public async Task<Agency?> UpdateAgency(int oldAgencyId, string newAgencyName)
     {
-        using var db = _dbContext;
-        var agencyToUpdate = db.Agencies.FirstOrDefault(x => x.Id == oldAgencyId);
+        await using var db = _dbContext;
+        var agencyToUpdate = await db.Agencies.FirstOrDefaultAsync(x => x.Id == oldAgencyId);
         
         if (agencyToUpdate == null)
         {
             return null;
         }
-
-        agencyToUpdate.Id = newAgency.Id;
-        agencyToUpdate.Agents = newAgency.Agents;
-        agencyToUpdate.Name = newAgency.Name;
-        agencyToUpdate.Properties = newAgency.Properties;
+        
+        agencyToUpdate.Name = newAgencyName;
+        await db.SaveChangesAsync();
 
         return agencyToUpdate;
     }
     /// Agency Delete
     public async Task DeleteAgencyByIdAsync(int deleteAgencyId)
     {
-        await using var db = _dbContext;
-        var removeEntity = db.Agencies.FirstOrDefault(x => x.Id == deleteAgencyId);
+        using var db = _dbContext;
+        var removeEntity = await db.Agencies.FirstOrDefaultAsync(x => x.Id == deleteAgencyId);
         db.Agencies.Remove(removeEntity);
         await db.SaveChangesAsync();
+        
     }
-    
-    
-
-    /// Property Create
-    public async Task CreatePropertyAsync(Property newProperty)
-    {
-        await using var db = _dbContext;
-        await db.Properties.AddAsync(newProperty);
-        await db.SaveChangesAsync();
-    }
-    /// Property Read
-    public async Task<List<Property>> GetAllPropertiesAsync()
-    {
-        await using var db = _dbContext;
-        var properties = await db.Properties.ToListAsync();
-        return properties;
-    }
-    /// Property Read
-    public Task<Property?> GetPropertyByIdAsync(int propertyId)
-    {
-        using var db = _dbContext; 
-        var property = db.Properties.FirstOrDefaultAsync(x => x.Id == propertyId);
-        return property;
-    }
-    /// Property Update
-    public async Task UpdateProperty(Property oldProperty, Property newProperty)
-    {
-        await using var db = _dbContext;
-        var orginal = await db.Properties.FirstOrDefaultAsync(x => x == oldProperty);
-        orginal.Id = newProperty.Id;
-        orginal.Address = newProperty.Address;
-        orginal.Size = newProperty.Size;
-        orginal.Price = newProperty.Price;
-        orginal.Owner = newProperty.Owner;
-        orginal.Agency = newProperty.Agency;
-        await db.SaveChangesAsync();
-    }
-    /// Property Delete
-    public async Task DeletePropertyById(int deletePropertyId)
-    {
-        await using var db = _dbContext;
-        var propertyToBeRemoved = await db.Properties.FirstOrDefaultAsync(x => x.Id == deletePropertyId);
-        db.Properties.Remove(propertyToBeRemoved);
-        await db.SaveChangesAsync();
-    }
-
     
     
     /// Agent Create
@@ -128,30 +81,78 @@ public class AgencyRepository : IRepository
         return agent;
     }
     /// Agent Update
-    public async Task UpdateAgent(int oldAgentId, Agent newAgent)
+    public async Task<Agent?> UpdateAgent(int oldAgentId, Agent newAgent)
     {
         await using var db = _dbContext;
-        var original = await db.Agents.FirstOrDefaultAsync(x => x.Id == newAgent.Id)!;
-        if (original != null)
-        {
-            original.Id = newAgent.Id;
-            original.FirstName = newAgent.FirstName; 
-            original.LastName = newAgent.LastName;
-            original.SSID = newAgent.SSID;
-            original.Property = newAgent.Property;
-            await db.SaveChangesAsync();
-        }
+        var agentToUpdate = await db.Agents.FirstOrDefaultAsync(x => x.Id == oldAgentId);
         
+        if (agentToUpdate == null) return null;
+        
+        agentToUpdate.Id = newAgent.Id;
+        agentToUpdate.FirstName = newAgent.FirstName; 
+        agentToUpdate.LastName = newAgent.LastName;
+        agentToUpdate.SSID = newAgent.SSID;
+        await db.SaveChangesAsync();
+
+        return agentToUpdate;
     }
     /// Agent Delete
     public async Task DeleteAgentByIdAsync(int deleteAgentId)
     {
-        await using var db = _dbContext;
+        
+        using var db = _dbContext;
         var toDelete = await db.Agents.FirstOrDefaultAsync(x => x.Id == deleteAgentId);
-        if (toDelete != null)
-        {
-            db.Agents.Remove(toDelete);
-            await db.SaveChangesAsync();
-        }
+        
+        db.Agents.Remove(toDelete);
+        await db.SaveChangesAsync();
+        
+    }
+    
+    
+    /// Property Create
+    public async Task CreatePropertyAsync(Property newProperty)
+    {
+        await using var db = _dbContext;
+        await db.Properties.AddAsync(newProperty);
+        await db.SaveChangesAsync();
+    }
+    /// Property Read
+    public async Task<List<Property>> GetAllPropertiesAsync()
+    {
+        await using var db = _dbContext;
+        var properties = await db.Properties.ToListAsync();
+        return properties;
+    }
+    /// Property Read
+    public Task<Property?> GetPropertyByIdAsync(int propertyId)
+    {
+        using var db = _dbContext; 
+        var property = db.Properties.FirstOrDefaultAsync(x => x.Id == propertyId);
+        return property;
+    }
+    /// Property Update
+    public async Task<Property?> UpdateProperty(int oldPropertyId, Property newProperty)
+    {
+        using var db = _dbContext;
+        var propertyToUpdate = await db.Properties.FirstOrDefaultAsync(x => x.Id == oldPropertyId);
+
+        if (propertyToUpdate == null) return null;
+        
+        propertyToUpdate.Id = newProperty.Id;
+        propertyToUpdate.Size = newProperty.Size;
+        propertyToUpdate.Price = newProperty.Price;
+        propertyToUpdate.Owner = newProperty.Owner;
+        propertyToUpdate.Buyer = newProperty.Buyer;
+        await db.SaveChangesAsync();
+        
+        return propertyToUpdate;
+    }
+    /// Property Delete
+    public async Task DeletePropertyById(int deletePropertyId)
+    {
+        using var db = _dbContext;
+        var propertyToBeRemoved = await db.Properties.FirstOrDefaultAsync(x => x.Id == deletePropertyId);
+        db.Properties.Remove(propertyToBeRemoved);
+        await db.SaveChangesAsync();
     }
 }

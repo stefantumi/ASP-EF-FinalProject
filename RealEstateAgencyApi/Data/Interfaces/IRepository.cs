@@ -11,36 +11,37 @@ public interface IRepository
     public Task CreateAgencyAsync(Agency newAgency);
     /// READ
     public Task<List<Agency>> GetAllAgenciesAsync();
+    /// READ
     public Task<Agency?> GetAgencyByIdAsync(int agencyId);
     /// UPDATE
-    public Agency? UpdateAgency(int oldAgencyId, Agency newAgency);
+    public Task<Agency?> UpdateAgency(int oldAgencyId, string newAgencyName);
     /// DELETE
     public Task DeleteAgencyByIdAsync(int deleteAgencyId);
     
     
+    /// AGENT
+    /// CREATE
+    public Task CreateAgentAsync(Agent newAgent);
+    /// READ
+    public Task<List<Agent>> GetAllAgentsAsync();
+    /// READ
+    public Task<Agent?> GetAgentByIdAsync(int agentId);
+    /// UPDATE
+    public Task<Agent?> UpdateAgent(int oldAgentId, Agent newAgent);
+    /// DELETE
+    public Task DeleteAgentByIdAsync(int deleteAgentId);
+    // update property og delete agent
+
     
     /// PROPERTY
     /// CREATE
     public Task CreatePropertyAsync(Property newProperty);
     /// READ
     public Task<List<Property>> GetAllPropertiesAsync();
+    /// READ
     public Task<Property?> GetPropertyByIdAsync(int propertyId);
     /// UPDATE
-    public Task UpdateProperty(Property oldProperty, Property newProperty);
+    public Task<Property?> UpdateProperty(int oldPropertyId, Property newProperty);
     /// DELETE
     public Task DeletePropertyById(int deletePropertyId);
-
-
-
-    /// AGENT
-    /// CREATE
-    public Task CreateAgentAsync(Agent newAgent);
-    /// READ
-    public Task<List<Agent>> GetAllAgentsAsync();
-    public Task<Agent?> GetAgentByIdAsync(int agentId);
-
-    /// UPDATE
-    public Task UpdateAgent(int oldAgentId, Agent newAgent);
-    /// DELETE
-    public Task DeleteAgentByIdAsync(int deleteAgentId);
 }

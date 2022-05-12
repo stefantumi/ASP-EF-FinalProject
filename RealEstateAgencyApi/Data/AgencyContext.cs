@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using RealEstateAgencyApi.Models;
 
@@ -9,6 +8,7 @@ public class AgencyContext : DbContext
     public DbSet<Agency> Agencies { get; set; }
     public DbSet<Property> Properties { get; set; }
     public DbSet<Agent> Agents { get; set; }
+    
      
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -12,8 +12,8 @@ using RealEstateAgencyApi.Data;
 namespace RealEstateAgencyApi.Migrations
 {
     [DbContext(typeof(AgencyContext))]
-    [Migration("20220511222923_allow null Agent.Properties")]
-    partial class allownullAgentProperties
+    [Migration("20220512195823_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,21 +23,6 @@ namespace RealEstateAgencyApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("AgencyProperty", b =>
-                {
-                    b.Property<int>("AgencyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PropertiesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AgencyId", "PropertiesId");
-
-                    b.HasIndex("PropertiesId");
-
-                    b.ToTable("AgencyProperty");
-                });
 
             modelBuilder.Entity("RealEstateAgencyApi.Models.Address", b =>
                 {
@@ -109,7 +94,7 @@ namespace RealEstateAgencyApi.Migrations
                     b.ToTable("Agents");
                 });
 
-            modelBuilder.Entity("RealEstateAgencyApi.Models.Contact", b =>
+            modelBuilder.Entity("RealEstateAgencyApi.Models.Buyer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -131,7 +116,32 @@ namespace RealEstateAgencyApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Contact");
+                    b.ToTable("Buyer");
+                });
+
+            modelBuilder.Entity("RealEstateAgencyApi.Models.Owner", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SSID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Owner");
                 });
 
             modelBuilder.Entity("RealEstateAgencyApi.Models.Property", b =>
@@ -145,7 +155,13 @@ namespace RealEstateAgencyApi.Migrations
                     b.Property<int>("AddressId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("AgencyId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("AgentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BuyerId")
                         .HasColumnType("int");
 
                     b.Property<int>("OwnerId")
@@ -161,26 +177,15 @@ namespace RealEstateAgencyApi.Migrations
 
                     b.HasIndex("AddressId");
 
+                    b.HasIndex("AgencyId");
+
                     b.HasIndex("AgentId");
+
+                    b.HasIndex("BuyerId");
 
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Properties");
-                });
-
-            modelBuilder.Entity("AgencyProperty", b =>
-                {
-                    b.HasOne("RealEstateAgencyApi.Models.Agency", null)
-                        .WithMany()
-                        .HasForeignKey("AgencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RealEstateAgencyApi.Models.Property", null)
-                        .WithMany()
-                        .HasForeignKey("PropertiesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("RealEstateAgencyApi.Models.Agent", b =>
@@ -198,11 +203,19 @@ namespace RealEstateAgencyApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RealEstateAgencyApi.Models.Agency", null)
+                        .WithMany("Properties")
+                        .HasForeignKey("AgencyId");
+
                     b.HasOne("RealEstateAgencyApi.Models.Agent", null)
-                        .WithMany("Property")
+                        .WithMany("Catalogue")
                         .HasForeignKey("AgentId");
 
-                    b.HasOne("RealEstateAgencyApi.Models.Contact", "Owner")
+                    b.HasOne("RealEstateAgencyApi.Models.Buyer", "Buyer")
+                        .WithMany()
+                        .HasForeignKey("BuyerId");
+
+                    b.HasOne("RealEstateAgencyApi.Models.Owner", "Owner")
                         .WithMany("Property")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -210,20 +223,24 @@ namespace RealEstateAgencyApi.Migrations
 
                     b.Navigation("Address");
 
+                    b.Navigation("Buyer");
+
                     b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("RealEstateAgencyApi.Models.Agency", b =>
                 {
                     b.Navigation("Agents");
+
+                    b.Navigation("Properties");
                 });
 
             modelBuilder.Entity("RealEstateAgencyApi.Models.Agent", b =>
                 {
-                    b.Navigation("Property");
+                    b.Navigation("Catalogue");
                 });
 
-            modelBuilder.Entity("RealEstateAgencyApi.Models.Contact", b =>
+            modelBuilder.Entity("RealEstateAgencyApi.Models.Owner", b =>
                 {
                     b.Navigation("Property");
                 });
