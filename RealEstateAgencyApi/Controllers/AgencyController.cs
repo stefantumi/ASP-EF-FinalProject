@@ -5,10 +5,10 @@ using RealEstateAgencyApi.Models;
 namespace RealEstateAgencyApi.Controllers;
 
 [Controller]
-[Microsoft.AspNetCore.Mvc.Route("api/agency")]
+[Route("api/agency")]
 public class AgencyController : ControllerBase
 {
-    private readonly IRepository _repository;
+    public IRepository _repository;
 
     public AgencyController(IRepository repository)
     {
@@ -83,7 +83,7 @@ public class AgencyController : ControllerBase
 
     [HttpPut]
     [Route("{oldAgencyId:int}")]
-    public async Task<IActionResult> UpdateAgency(int oldAgencyId, string newAgencyName)
+    public async Task<IActionResult> UpdateAgency([FromRoute]int oldAgencyId, string newAgencyName)
     {
         var original = await _repository.GetAgencyByIdAsync(oldAgencyId);
         if (original == null) return NotFound(original);

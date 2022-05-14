@@ -9,8 +9,7 @@ public class AgencyContext : DbContext
     public DbSet<Property> Properties { get; set; }
     public DbSet<Agent> Agents { get; set; }
     
-     
-
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(

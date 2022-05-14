@@ -82,7 +82,7 @@ public class AgentController : ControllerBase
 
     [HttpPut]
     [Route("{oldAgentId:int}")]
-    public async Task<IActionResult> UpdateAgent(int oldAgentId, Agent newAgent)
+    public async Task<IActionResult> UpdateAgent([FromRoute]int oldAgentId, Agent newAgent)
     {
         var original = await _repository.GetAgentByIdAsync(oldAgentId);
         if (original == null) return NotFound(original);
@@ -99,15 +99,15 @@ public class AgentController : ControllerBase
 
     [HttpDelete]
     [Route("{deleteAgentId:int}")]
-    public async Task<ActionResult> DeleteAgentById(int deleteAgentId)
+    public async Task<ActionResult> DeleteAgentById([FromRoute]int deleteAgentId)
     {
         var exists = await _repository.GetAgentByIdAsync(deleteAgentId);
+        if (exists == null)
+        {
+            return NotFound();
+        }
         try
         {
-            if (exists == null)
-            {
-                return NotFound();
-            }
             // TODO: should anything be returned ? if so, is this correct ? 
             await _repository.DeleteAgentByIdAsync(deleteAgentId);
             return Ok(exists);
