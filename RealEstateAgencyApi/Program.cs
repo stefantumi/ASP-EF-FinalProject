@@ -1,16 +1,21 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Newtonsoft.Json;
 using RealEstateAgencyApi.Data.Interfaces;
 using RealEstateAgencyApi.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// TODO: just added this
-builder.Services.AddAuthentication();
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IRepository, AgencyRepository>();
+builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+builder.Services.AddCors(options => options.AddPolicy(name:"local", policyBuilder => 
+    policyBuilder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
+
+    )
+    );
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -26,7 +31,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
 

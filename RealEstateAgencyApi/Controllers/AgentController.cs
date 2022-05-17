@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateAgencyApi.Data.Interfaces;
 using RealEstateAgencyApi.Models;
@@ -13,7 +14,6 @@ public class AgentController : ControllerBase
     public AgentController(IRepository repository)
     {
         _repository = repository;
-        
     }
 
     [HttpPost]

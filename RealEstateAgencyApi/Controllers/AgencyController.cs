@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateAgencyApi.Data.Interfaces;
 using RealEstateAgencyApi.Models;
@@ -6,6 +7,7 @@ namespace RealEstateAgencyApi.Controllers;
 
 [Controller]
 [Route("api/agency")]
+[EnableCors("local")]
 public class AgencyController : ControllerBase
 {
     public IRepository _repository;
