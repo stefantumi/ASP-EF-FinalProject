@@ -14,7 +14,7 @@ namespace RealEstateAgencyApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Street = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     HouseNo = table.Column<int>(type: "int", nullable: false),
                     Zip = table.Column<int>(type: "int", nullable: false)
                 },
@@ -29,7 +29,7 @@ namespace RealEstateAgencyApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -42,9 +42,9 @@ namespace RealEstateAgencyApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SSID = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SSID = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -57,9 +57,9 @@ namespace RealEstateAgencyApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SSID = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SSID = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -73,9 +73,9 @@ namespace RealEstateAgencyApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AgencyId = table.Column<int>(type: "int", nullable: true),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SSID = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SSID = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -93,10 +93,10 @@ namespace RealEstateAgencyApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AddressId = table.Column<int>(type: "int", nullable: false),
+                    AddressId = table.Column<int>(type: "int", nullable: true),
                     Size = table.Column<double>(type: "float", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
-                    OwnerId = table.Column<int>(type: "int", nullable: false),
+                    OwnerId = table.Column<int>(type: "int", nullable: true),
                     BuyerId = table.Column<int>(type: "int", nullable: true),
                     AgencyId = table.Column<int>(type: "int", nullable: true),
                     AgentId = table.Column<int>(type: "int", nullable: true)
@@ -108,8 +108,7 @@ namespace RealEstateAgencyApi.Migrations
                         name: "FK_Properties_Address_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Address",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Properties_Agencies_AgencyId",
                         column: x => x.AgencyId,
@@ -129,8 +128,7 @@ namespace RealEstateAgencyApi.Migrations
                         name: "FK_Properties_Owner_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "Owner",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

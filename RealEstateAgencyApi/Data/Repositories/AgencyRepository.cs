@@ -25,7 +25,8 @@ public class AgencyRepository : IRepository
     public async Task<List<Agency>> GetAllAgenciesAsync()
     {
         var db = _dbContext;
-        return await db.Agencies.ToListAsync();
+        // return await db.Agencies.ToListAsync();
+        return await db.Agencies.Include(x => x.Properties).ToListAsync();
     }
     /// Agency Read
     public async Task<Agency?> GetAgencyByIdAsync(int agencyId)
