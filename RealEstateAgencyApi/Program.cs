@@ -11,10 +11,7 @@ builder.Services.AddScoped<IRepository, AgencyRepository>();
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 builder.Services.AddCors(options => options.AddPolicy(name:"local", policyBuilder => 
-    policyBuilder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
-
-    )
-    );
+    policyBuilder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
