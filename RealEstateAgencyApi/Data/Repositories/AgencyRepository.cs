@@ -26,13 +26,29 @@ public class AgencyRepository : IRepository
     {
         var db = _dbContext;
         // return await db.Agencies.ToListAsync();
-        return await db.Agencies.Include(x => x.Properties).ToListAsync();
+        return await db.Agencies
+            /*.Include(x => x.Agents)
+            .Include(x => x.Properties)
+            .ThenInclude(x => x.Address)
+            .Include(x => x.Properties)
+            .ThenInclude(x => x.Owner)
+            .Include(x => x.Properties)
+            .ThenInclude(x => x.Buyer)*/
+            .ToListAsync();
     }
     /// Agency Read
     public async Task<Agency?> GetAgencyByIdAsync(int agencyId)
     {
         var db = _dbContext;
-        var agency = await db.Agencies.FirstOrDefaultAsync(x => x.Id == agencyId);
+        var agency = await db.Agencies
+            .Include(x => x.Agents)
+            .Include(x => x.Properties)
+            .ThenInclude(x => x.Address)
+            .Include(x => x.Properties)
+            .ThenInclude(x => x.Owner)
+            .Include(x => x.Properties)
+            .ThenInclude(x => x.Buyer)
+            .FirstOrDefaultAsync(x => x.Id == agencyId);
         return agency;
     }
     /// Agency Update
@@ -75,7 +91,7 @@ public class AgencyRepository : IRepository
     public async Task<List<Agent>> GetAllAgentsAsync()
     {
         var db = _dbContext;
-        return await db.Agents.ToListAsync();
+        return await db.Agents.Include(x => x.Catalogue).ToListAsync();
     }
     /// Agent Read
     public async Task<Agent?> GetAgentByIdAsync(int agentId)
@@ -125,14 +141,16 @@ public class AgencyRepository : IRepository
     public async Task<List<Property>> GetAllPropertiesAsync()
     {
         var db = _dbContext;
-        var properties = await db.Properties.ToListAsync();
+        var properties = await db.Properties.Include(x => x.Address).ToListAsync();
         return properties;
     }
     /// Property Read
     public Task<Property?> GetPropertyByIdAsync(int propertyId)
     {
         var db = _dbContext; 
-        var property = db.Properties.FirstOrDefaultAsync(x => x.Id == propertyId);
+        var property = db.Properties
+            .Include(x => x.Address)
+            .FirstOrDefaultAsync(x => x.Id == propertyId);
         return property;
     }
     /// Property Update
