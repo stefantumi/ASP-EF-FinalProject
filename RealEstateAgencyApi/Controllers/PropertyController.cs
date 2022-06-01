@@ -81,7 +81,7 @@ public class PropertyController : ControllerBase
 
     [HttpPut]
     [Route("{oldProperty:int}")]
-    public async Task<IActionResult> UpdateProperty(int oldPropertyId, Property newProperty)
+    public async Task<IActionResult> UpdateProperty([FromBody]int oldPropertyId, Property newProperty)
     {
         var original = await _repository.GetPropertyByIdAsync(oldPropertyId);
         if (original == null) return NotFound(original); 
