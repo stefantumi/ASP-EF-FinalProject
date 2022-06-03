@@ -158,7 +158,9 @@ public class AgencyRepository : IRepository
         if (propertyToUpdate == null) return null;
 
         propertyToUpdate.Size = newProperty.Size;
-        propertyToUpdate.Address = newProperty.Address;
+        propertyToUpdate.Address.Street = newProperty.Address.Street;
+        propertyToUpdate.Address.HouseNo = newProperty.Address.HouseNo;
+        propertyToUpdate.Address.Zip = newProperty.Address.Zip;
         propertyToUpdate.Price = newProperty.Price;
         propertyToUpdate.Owner = newProperty.Owner;
         propertyToUpdate.Buyer = newProperty.Buyer;
@@ -167,10 +169,7 @@ public class AgencyRepository : IRepository
         
         var updatedResult = await db.Properties.FirstOrDefaultAsync(x => x.Id == newProperty.Id);
 
-        using var toDateDb = _dbContext;
-        {
-            updatedResult = await toDateDb.Properties.FirstOrDefaultAsync(x => x.Id == newProperty.Id);
-        }
+       
         
         return updatedResult;
     }

@@ -89,7 +89,7 @@ public class PropertyController : ControllerBase
         try
         {
             // var updated = await _repository.UpdateProperty(oldPropertyId, newProperty);
-            return CreatedAtAction(nameof(GetPropertyById), new { id = updated.Id }, updated);
+            return CreatedAtAction(nameof(GetPropertyById), new { id = updated!.Id }, updated);
         }
         catch (Exception)
         {

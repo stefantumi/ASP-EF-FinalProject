@@ -92,7 +92,7 @@ public class AgencyController : ControllerBase
         var updated = await _repository.UpdateAgency(oldAgencyId, newAgencyName);
         try
         {
-            return CreatedAtAction(nameof(GetAgencyById), new { id = updated.Id }, updated);
+            return CreatedAtAction(nameof(GetAgencyById), new { id = updated!.Id }, updated);
         }
         catch (Exception)
         {

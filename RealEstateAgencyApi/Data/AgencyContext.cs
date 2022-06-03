@@ -12,10 +12,7 @@ public class AgencyContext : DbContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        //optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;User Id=SA;Password=StefanTumi.7;Database=Agencydatabase;Trusted_Connection=false");
         optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Agencydatabase;Trusted_Connection=True;");
         
-        // optionsBuilder.UseMySQL("server=localhost;database=library;user=user;password=password");
-
     }
 }

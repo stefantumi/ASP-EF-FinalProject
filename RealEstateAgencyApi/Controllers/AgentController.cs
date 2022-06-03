@@ -89,7 +89,7 @@ public class AgentController : ControllerBase
         try
         {
             var updated = await _repository.UpdateAgent(oldAgentId, newAgent);
-            return CreatedAtAction(nameof(GetAgentById), new { id = updated.Id }, updated);
+            return CreatedAtAction(nameof(GetAgentById), new { id = updated!.Id }, updated);
         }
         catch (Exception)
         {

@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace RealEstateAgencyApi.Models;
 
 public class Property
@@ -8,4 +10,7 @@ public class Property
     public double Price { get; set; }
     public Owner? Owner { get; set; }
     public Buyer? Buyer { get; set; }
+    
+    
+    
 }
