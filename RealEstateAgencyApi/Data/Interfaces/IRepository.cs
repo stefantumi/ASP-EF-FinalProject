@@ -41,7 +41,7 @@ public interface IRepository
     /// READ
     public Task<Property?> GetPropertyByIdAsync(int propertyId);
     /// UPDATE
-    public Task<Property?> UpdateProperty(int oldPropertyId, Property newProperty);
+    public Task<Property?> UpdateProperty(Property newProperty);
     /// DELETE
     public Task DeletePropertyById(int deletePropertyId);
 }

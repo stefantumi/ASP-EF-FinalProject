@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstateAgencyApi.Data.Interfaces;
 using RealEstateAgencyApi.Models;
@@ -80,14 +79,16 @@ public class PropertyController : ControllerBase
     }
 
     [HttpPut]
-    [Route("{oldProperty:int}")]
-    public async Task<IActionResult> UpdateProperty([FromBody]int oldPropertyId, Property newProperty)
+    //[Route("{oldPropertyId:int}")]
+    public async Task<IActionResult> UpdateProperty([FromBody] Property newProperty)
     {
-        var original = await _repository.GetPropertyByIdAsync(oldPropertyId);
-        if (original == null) return NotFound(original); 
+        Console.WriteLine(newProperty);
+        var original = await _repository.GetPropertyByIdAsync(newProperty.Id);
+        if (original == null) return NotFound(original);
+        var updated = await _repository.UpdateProperty(newProperty);
         try
         {
-            var updated = await _repository.UpdateProperty(oldPropertyId, newProperty);
+            // var updated = await _repository.UpdateProperty(oldPropertyId, newProperty);
             return CreatedAtAction(nameof(GetPropertyById), new { id = updated.Id }, updated);
         }
         catch (Exception)

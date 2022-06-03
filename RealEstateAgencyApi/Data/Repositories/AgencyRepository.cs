@@ -27,13 +27,9 @@ public class AgencyRepository : IRepository
         var db = _dbContext;
         // return await db.Agencies.ToListAsync();
         return await db.Agencies
-            /*.Include(x => x.Agents)
-            .Include(x => x.Properties)
-            .ThenInclude(x => x.Address)
-            .Include(x => x.Properties)
-            .ThenInclude(x => x.Owner)
-            .Include(x => x.Properties)
-            .ThenInclude(x => x.Buyer)*/
+            .Include(agency => agency.Properties)!
+            .ThenInclude(property => property.Address)
+            .Include(agency => agency.Agents)
             .ToListAsync();
     }
     /// Agency Read
@@ -42,11 +38,11 @@ public class AgencyRepository : IRepository
         var db = _dbContext;
         var agency = await db.Agencies
             .Include(x => x.Agents)
-            .Include(x => x.Properties)
+            .Include(x => x.Properties)!
             .ThenInclude(x => x.Address)
-            .Include(x => x.Properties)
+            .Include(x => x.Properties)!
             .ThenInclude(x => x.Owner)
-            .Include(x => x.Properties)
+            .Include(x => x.Properties)!
             .ThenInclude(x => x.Buyer)
             .FirstOrDefaultAsync(x => x.Id == agencyId);
         return agency;
@@ -154,21 +150,29 @@ public class AgencyRepository : IRepository
         return property;
     }
     /// Property Update
-    public async Task<Property?> UpdateProperty(int oldPropertyId, Property newProperty)
+    public async Task<Property?> UpdateProperty(Property newProperty)
     {
         var db = _dbContext;
-        var propertyToUpdate = await db.Properties.FirstOrDefaultAsync(x => x.Id == oldPropertyId);
+        var propertyToUpdate = await db.Properties.FirstOrDefaultAsync(x => x.Id == newProperty.Id);
 
         if (propertyToUpdate == null) return null;
-        
-        propertyToUpdate.Id = newProperty.Id;
+
         propertyToUpdate.Size = newProperty.Size;
+        propertyToUpdate.Address = newProperty.Address;
         propertyToUpdate.Price = newProperty.Price;
         propertyToUpdate.Owner = newProperty.Owner;
         propertyToUpdate.Buyer = newProperty.Buyer;
         await db.SaveChangesAsync();
         
-        return propertyToUpdate;
+        
+        var updatedResult = await db.Properties.FirstOrDefaultAsync(x => x.Id == newProperty.Id);
+
+        using var toDateDb = _dbContext;
+        {
+            updatedResult = await toDateDb.Properties.FirstOrDefaultAsync(x => x.Id == newProperty.Id);
+        }
+        
+        return updatedResult;
     }
     /// Property Delete
     public async Task DeletePropertyById(int deletePropertyId)
