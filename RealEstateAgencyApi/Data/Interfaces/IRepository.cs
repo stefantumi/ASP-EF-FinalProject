@@ -17,22 +17,7 @@ public interface IRepository
     public Task<Agency?> UpdateAgency(int oldAgencyId, string newAgencyName);
     /// DELETE
     public Task DeleteAgencyByIdAsync(int deleteAgencyId);
-    
-    
-    /// AGENT
-    /// CREATE
-    public Task CreateAgentAsync(Agent newAgent);
-    /// READ
-    public Task<List<Agent>> GetAllAgentsAsync();
-    /// READ
-    public Task<Agent?> GetAgentByIdAsync(int agentId);
-    /// UPDATE
-    public Task<Agent?> UpdateAgent(int oldAgentId, Agent newAgent);
-    /// DELETE
-    public Task DeleteAgentByIdAsync(int deleteAgentId);
-    // update property og delete agent
-
-    
+   
     /// PROPERTY
     /// CREATE
     public Task CreatePropertyAsync(Property newProperty);
@@ -44,4 +29,17 @@ public interface IRepository
     public Task<Property?> UpdateProperty(Property newProperty);
     /// DELETE
     public Task DeletePropertyById(int deletePropertyId);
+    
+    
+    /// ADDRESS
+    /// CREATE
+    public Task CreateAddressAsync(Address newAddress);
+    /// READ
+    public Task<List<Address>> GetAllAddressesAsync();
+    /// READ
+    public Task<Address?> GetAddressByIdAsync(int addressId);
+    /// UPDATE
+    public Task<Address?> UpdateAddress(Address newAddress);
+    /// DELETE
+    public Task DeleteAddressById(int deleteAddressId);
 }

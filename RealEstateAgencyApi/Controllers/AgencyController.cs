@@ -20,7 +20,6 @@ public class AgencyController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> CreateAgency([FromBody]Agency newAgency)
     {
-        
         try
         {
             if (ModelState.IsValid)
@@ -28,11 +27,7 @@ public class AgencyController : ControllerBase
                 await _repository.CreateAgencyAsync(newAgency);
                 return CreatedAtAction(nameof(GetAgencyById), new { id = newAgency.Id }, newAgency);
             }
-            else
-            {
-                // return NoContent(newAgency);
-                return NotFound(ModelState);
-            }
+            return NotFound(ModelState);
         }
         catch (Exception)
         {
@@ -48,13 +43,9 @@ public class AgencyController : ControllerBase
         {
             if (ModelState.IsValid)
             {
-                
                 return Ok(agencies);
             }
-            else
-            {
-                return NotFound();
-            }
+            return NotFound();
         }
         catch (Exception)
         {

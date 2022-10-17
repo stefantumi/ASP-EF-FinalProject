@@ -18,17 +18,18 @@ public class PropertyController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> CreateProperty([FromBody]Property newProperty)
     {
+        Console.Write(newProperty);
         try
         {
+            Console.Write("model state");
+            Console.Write(ModelState.IsValid);
+            Console.Write(newProperty);
             if (ModelState.IsValid)
             {
                 await _repository.CreatePropertyAsync(newProperty);
                 return CreatedAtAction(nameof(GetPropertyById), new { id = newProperty.Id }, newProperty);
             }
-            else
-            {
-                return NotFound();
-            }
+            return NotFound();
         }
         catch (Exception)
         {
@@ -40,16 +41,14 @@ public class PropertyController : ControllerBase
     public async Task<ActionResult<List<Property>>> GetAllProperties()
     {
         List<Property> properties = await _repository.GetAllPropertiesAsync();
+        Console.Write("reach");
         try
         {
             if (ModelState.IsValid)
             {
                 return Ok(properties);
             }
-            else
-            {
-                return NotFound();
-            }
+            return NotFound();
         }
         catch (Exception)
         {

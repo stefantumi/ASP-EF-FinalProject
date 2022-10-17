@@ -7,12 +7,13 @@ namespace RealEstateAgencyApi.Data.Repositories;
 public class AgencyRepository : IRepository
 {
     public AgencyContext _dbContext;
+    
     public AgencyRepository()
     {
         _dbContext = new AgencyContext();
+
     }
-    
-    
+
     /// Agency Create
     public async Task CreateAgencyAsync(Agency newAgency)
     {
@@ -27,9 +28,6 @@ public class AgencyRepository : IRepository
         var db = _dbContext;
         // return await db.Agencies.ToListAsync();
         return await db.Agencies
-            .Include(agency => agency.Properties)!
-            .ThenInclude(property => property.Address)
-            .Include(agency => agency.Agents)
             .ToListAsync();
     }
     /// Agency Read
@@ -37,13 +35,9 @@ public class AgencyRepository : IRepository
     {
         var db = _dbContext;
         var agency = await db.Agencies
-            .Include(x => x.Agents)
             .Include(x => x.Properties)!
             .ThenInclude(x => x.Address)
             .Include(x => x.Properties)!
-            .ThenInclude(x => x.Owner)
-            .Include(x => x.Properties)!
-            .ThenInclude(x => x.Buyer)
             .FirstOrDefaultAsync(x => x.Id == agencyId);
         return agency;
     }
@@ -74,61 +68,13 @@ public class AgencyRepository : IRepository
             await db.SaveChangesAsync();    
         }
     }
-    
-    
-    /// Agent Create
-    public async Task CreateAgentAsync(Agent newAgent)
-    {
-        var db = _dbContext;
-        await db.Agents.AddAsync(newAgent);
-        await db.SaveChangesAsync();
-    }
-    /// Agent Read
-    public async Task<List<Agent>> GetAllAgentsAsync()
-    {
-        var db = _dbContext;
-        return await db.Agents.Include(x => x.Catalogue).ToListAsync();
-    }
-    /// Agent Read
-    public async Task<Agent?> GetAgentByIdAsync(int agentId)
-    {
-        var db = _dbContext;
-        var agent = await db.Agents.FirstOrDefaultAsync(x => x.Id == agentId);
-        return agent;
-    }
-    /// Agent Update
-    public async Task<Agent?> UpdateAgent(int oldAgentId, Agent newAgent)
-    {
-        var db = _dbContext;
-        var agentToUpdate = await db.Agents.FirstOrDefaultAsync(x => x.Id == oldAgentId);
-        
-        if (agentToUpdate == null) return null;
-        
-        agentToUpdate.Id = newAgent.Id;
-        agentToUpdate.FirstName = newAgent.FirstName; 
-        agentToUpdate.LastName = newAgent.LastName;
-        agentToUpdate.SSID = newAgent.SSID;
-        await db.SaveChangesAsync();
 
-        return agentToUpdate;
-    }
-    /// Agent Delete
-    public async Task DeleteAgentByIdAsync(int deleteAgentId)
-    {
-        
-        var db = _dbContext;
-        var toDelete = await db.Agents.FirstOrDefaultAsync(x => x.Id == deleteAgentId);
-        if (toDelete != null)
-        {
-            db.Agents.Remove(toDelete);
-        }
-        await db.SaveChangesAsync();
-    }
-    
-    
     /// Property Create
     public async Task CreatePropertyAsync(Property newProperty)
     {
+        Console.Write("hérna er new property");
+        Console.Write(newProperty);
+
         var db = _dbContext;
         await db.Properties.AddAsync(newProperty);
         await db.SaveChangesAsync();
@@ -162,16 +108,11 @@ public class AgencyRepository : IRepository
         propertyToUpdate.Address.HouseNo = newProperty.Address.HouseNo;
         propertyToUpdate.Address.Zip = newProperty.Address.Zip;
         propertyToUpdate.Price = newProperty.Price;
-        propertyToUpdate.Owner = newProperty.Owner;
-        propertyToUpdate.Buyer = newProperty.Buyer;
         await db.SaveChangesAsync();
         
-        
-        var updatedResult = await db.Properties.FirstOrDefaultAsync(x => x.Id == newProperty.Id);
+       var updatedResult = await db.Properties.FirstOrDefaultAsync(x => x.Id == newProperty.Id);
 
-       
-        
-        return updatedResult;
+       return updatedResult;
     }
     /// Property Delete
     public async Task DeletePropertyById(int deletePropertyId)
@@ -181,6 +122,59 @@ public class AgencyRepository : IRepository
         if (propertyToBeRemoved != null)
         {
             db.Properties.Remove(propertyToBeRemoved);
+            await db.SaveChangesAsync();
+        }
+    }
+
+
+    public async Task CreateAddressAsync(Address newAddress)
+    {
+        var db = _dbContext;
+        await db.Addresses.AddAsync(newAddress);
+        await db.SaveChangesAsync();
+    }
+    /// Property Read
+    public async Task<List<Address>> GetAllAddressesAsync()
+    {
+        var db = _dbContext;
+        var addresses = await db.Addresses.ToListAsync();
+        return addresses;
+    }
+    /// Address Read
+    public Task<Address?> GetAddressByIdAsync(int addressId)
+    {
+        var db = _dbContext; 
+        var address = db.Addresses
+            .FirstOrDefaultAsync(x => x.Id == addressId);
+        return address;
+    }
+    /// Address Update
+    public async Task<Address?> UpdateAddress(Address newAddress)
+    {
+        var db = _dbContext;
+        var addressToUpdate = await db.Addresses.FirstOrDefaultAsync(x => x.Id == newAddress.Id);
+
+        if (addressToUpdate == null) return null;
+
+        addressToUpdate.Id = newAddress.Id;
+        addressToUpdate.Street = newAddress.Street;
+        addressToUpdate.Zip = newAddress.Zip;
+        addressToUpdate.HouseNo = newAddress.HouseNo;
+        
+        await db.SaveChangesAsync();
+        
+        var updatedResult = await db.Addresses.FirstOrDefaultAsync(x => x.Id == newAddress.Id);
+
+        return updatedResult;
+    }
+    /// Address Delete
+    public async Task DeleteAddressById(int deleteAddressId)
+    {
+        var db = _dbContext;
+        var addressToBeRemoved = await db.Addresses.FirstOrDefaultAsync(x => x.Id == deleteAddressId);
+        if (addressToBeRemoved != null)
+        {
+            db.Addresses.Remove(addressToBeRemoved);
             await db.SaveChangesAsync();
         }
     }
