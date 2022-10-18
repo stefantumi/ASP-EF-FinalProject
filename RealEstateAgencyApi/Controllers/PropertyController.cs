@@ -41,7 +41,6 @@ public class PropertyController : ControllerBase
     public async Task<ActionResult<List<Property>>> GetAllProperties()
     {
         List<Property> properties = await _repository.GetAllPropertiesAsync();
-        Console.Write("reach");
         try
         {
             if (ModelState.IsValid)

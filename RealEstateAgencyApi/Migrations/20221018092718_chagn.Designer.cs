@@ -12,8 +12,8 @@ using RealEstateAgencyApi.Data;
 namespace RealEstateAgencyApi.Migrations
 {
     [DbContext(typeof(AgencyContext))]
-    [Migration("20221017110826_simplify")]
-    partial class simplify
+    [Migration("20221018092718_chagn")]
+    partial class chagn
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -71,9 +71,6 @@ namespace RealEstateAgencyApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("AgencyId")
                         .HasColumnType("int");
 
@@ -85,8 +82,6 @@ namespace RealEstateAgencyApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
-
                     b.HasIndex("AgencyId");
 
                     b.ToTable("Properties");
@@ -94,17 +89,9 @@ namespace RealEstateAgencyApi.Migrations
 
             modelBuilder.Entity("RealEstateAgencyApi.Models.Property", b =>
                 {
-                    b.HasOne("RealEstateAgencyApi.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RealEstateAgencyApi.Models.Agency", null)
                         .WithMany("Properties")
                         .HasForeignKey("AgencyId");
-
-                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("RealEstateAgencyApi.Models.Agency", b =>

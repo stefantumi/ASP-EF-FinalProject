@@ -72,9 +72,6 @@ public class AgencyRepository : IRepository
     /// Property Create
     public async Task CreatePropertyAsync(Property newProperty)
     {
-        Console.Write("hérna er new property");
-        Console.Write(newProperty);
-
         var db = _dbContext;
         await db.Properties.AddAsync(newProperty);
         await db.SaveChangesAsync();

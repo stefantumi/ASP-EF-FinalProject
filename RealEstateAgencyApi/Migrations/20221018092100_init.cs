@@ -4,7 +4,7 @@
 
 namespace RealEstateAgencyApi.Migrations
 {
-    public partial class simplify : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -42,7 +42,6 @@ namespace RealEstateAgencyApi.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AddressId = table.Column<int>(type: "int", nullable: false),
                     Size = table.Column<double>(type: "float", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     AgencyId = table.Column<int>(type: "int", nullable: true)
@@ -51,22 +50,11 @@ namespace RealEstateAgencyApi.Migrations
                 {
                     table.PrimaryKey("PK_Properties", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Properties_Addresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "Addresses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Properties_Agencies_AgencyId",
                         column: x => x.AgencyId,
                         principalTable: "Agencies",
                         principalColumn: "Id");
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Properties_AddressId",
-                table: "Properties",
-                column: "AddressId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Properties_AgencyId",
@@ -77,10 +65,10 @@ namespace RealEstateAgencyApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Properties");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
-                name: "Addresses");
+                name: "Properties");
 
             migrationBuilder.DropTable(
                 name: "Agencies");

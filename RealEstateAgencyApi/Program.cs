@@ -1,8 +1,6 @@
 using Newtonsoft.Json;
-using RealEstateAgencyApi.Controllers;
 using RealEstateAgencyApi.Data.Interfaces;
 using RealEstateAgencyApi.Data.Repositories;
-using RealEstateAgencyApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,12 +10,15 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IRepository, AgencyRepository>();
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
-var MyAllowedSpecificorigins = "_myAllowedSpecificOrigins";
+const string myAllowedSpecification = "_myAllowedSpecificOrigins";
 builder.Services.AddCors(options => 
-    options.AddPolicy(name: MyAllowedSpecificorigins,
+    options.AddPolicy(name: myAllowedSpecification,
         policy =>
         {
-            policy.WithOrigins("*");
+            policy.WithOrigins("*", "127.0.0.1", "https://localhost/", "http://localhost:8080")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin();
         })
 );
 /*builder.Services.AddCors(options => options.AddPolicy(name:"local", policyBuilder => 
@@ -38,7 +39,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors(MyAllowedSpecificorigins);
+app.UseCors(myAllowedSpecification);
 app.UseAuthorization();
 app.MapControllers();
 

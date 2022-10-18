@@ -18,6 +18,7 @@ public class AddressController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> CreateAddress([FromBody]Address newAddress)
     {
+        Console.Write(newAddress);
         try
         {
             if (ModelState.IsValid)
@@ -25,10 +26,7 @@ public class AddressController : ControllerBase
                 await _repository.CreateAddressAsync(newAddress);
                 return CreatedAtAction(nameof(GetAddressById), new { id = newAddress.Id }, newAddress);
             }
-            else
-            {
-                return NotFound();
-            }
+            return NotFound();
         }
         catch (Exception)
         {

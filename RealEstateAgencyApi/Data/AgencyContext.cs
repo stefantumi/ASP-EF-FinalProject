@@ -10,7 +10,7 @@ public class AgencyContext : DbContext
     public DbSet<Agency> Agencies { get; set; }
     
     public DbSet<Address> Addresses { get; set; }
-    public DbSet<Property> Properties { get; }
+    public DbSet<Property> Properties { get; set; }
     
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

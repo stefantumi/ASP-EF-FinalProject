@@ -12,8 +12,8 @@ using RealEstateAgencyApi.Data;
 namespace RealEstateAgencyApi.Migrations
 {
     [DbContext(typeof(AgencyContext))]
-    [Migration("20221017111930_allow null in property_address")]
-    partial class allownullinproperty_address
+    [Migration("20221018092913_fix")]
+    partial class fix
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
