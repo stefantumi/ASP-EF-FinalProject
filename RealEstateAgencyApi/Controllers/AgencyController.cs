@@ -7,7 +7,6 @@ namespace RealEstateAgencyApi.Controllers;
 
 [Controller]
 [Route("api/agency")]
-[EnableCors("local")]
 public class AgencyController : ControllerBase
 {
     public IRepository _repository;
@@ -22,12 +21,9 @@ public class AgencyController : ControllerBase
     {
         try
         {
-            if (ModelState.IsValid)
-            {
-                await _repository.CreateAgencyAsync(newAgency);
-                return CreatedAtAction(nameof(GetAgencyById), new { id = newAgency.Id }, newAgency);
-            }
-            return NotFound(ModelState);
+            if (!ModelState.IsValid) return NotFound(ModelState);
+            await _repository.CreateAgencyAsync(newAgency);
+            return CreatedAtAction(nameof(GetAgencyById), new { id = newAgency.Id }, newAgency);
         }
         catch (Exception)
         {
