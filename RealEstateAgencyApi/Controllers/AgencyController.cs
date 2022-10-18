@@ -71,12 +71,12 @@ public class AgencyController : ControllerBase
     }
 
     [HttpPut]
-    [Route("{oldAgencyId:int}")]
-    public async Task<IActionResult> UpdateAgency([FromRoute]int oldAgencyId, string newAgencyName)
+    [Route("{agencyId:int}")]
+    public async Task<IActionResult> UpdateAgency([FromRoute]int agencyId, string newAgencyName)
     {
-        var original = await _repository.GetAgencyByIdAsync(oldAgencyId);
+        var original = await _repository.GetAgencyByIdAsync(agencyId);
         if (original == null) return NotFound(original);
-        var updated = await _repository.UpdateAgency(oldAgencyId, newAgencyName);
+        var updated = await _repository.UpdateAgency(agencyId, newAgencyName);
         try
         {
             return CreatedAtAction(nameof(GetAgencyById), new { id = updated!.Id }, updated);
