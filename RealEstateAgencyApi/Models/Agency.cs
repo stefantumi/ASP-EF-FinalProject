@@ -1,5 +1,3 @@
-using System.CodeDom.Compiler;
-using System.ComponentModel.DataAnnotations;
 
 namespace RealEstateAgencyApi.Models;
 

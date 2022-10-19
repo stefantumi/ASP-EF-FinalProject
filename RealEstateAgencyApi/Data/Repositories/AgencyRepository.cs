@@ -37,7 +37,6 @@ public class AgencyRepository : IRepository
         var agency = await db.Agencies
             .Include(x => x.Properties)!
             .ThenInclude(x => x.Address)
-            .Include(x => x.Properties)!
             .FirstOrDefaultAsync(x => x.Id == agencyId);
         return agency;
     }
