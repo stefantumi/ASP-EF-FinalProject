@@ -18,18 +18,11 @@ public class PropertyController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> CreateProperty([FromBody]Property newProperty)
     {
-        Console.Write(newProperty);
         try
         {
-            Console.Write("model state");
-            Console.Write(ModelState.IsValid);
-            Console.Write(newProperty);
-            if (ModelState.IsValid)
-            {
-                await _repository.CreatePropertyAsync(newProperty);
-                return CreatedAtAction(nameof(GetPropertyById), new { id = newProperty.Id }, newProperty);
-            }
-            return NotFound();
+            if (!ModelState.IsValid) return NotFound();
+            await _repository.CreatePropertyAsync(newProperty);
+            return CreatedAtAction(nameof(GetPropertyById), new { id = newProperty.Id }, newProperty);
         }
         catch (Exception)
         {
@@ -106,7 +99,6 @@ public class PropertyController : ControllerBase
             {
                 return NotFound();
             }
-            // TODO: should anything be returned ? if so, is this correct ? 
             await _repository.DeletePropertyById(deleteProperty);
             return Ok(exists);
         }

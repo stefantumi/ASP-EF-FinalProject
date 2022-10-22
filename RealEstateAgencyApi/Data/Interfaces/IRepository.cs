@@ -14,7 +14,7 @@ public interface IRepository
     /// READ
     public Task<Agency?> GetAgencyByIdAsync(int agencyId);
     /// UPDATE
-    public Task<Agency?> UpdateAgency(int oldAgencyId, string newAgencyName);
+    public Task<Agency?> UpdateAgency(int AgencyId, string newAgencyName);
     /// DELETE
     public Task DeleteAgencyByIdAsync(int deleteAgencyId);
    

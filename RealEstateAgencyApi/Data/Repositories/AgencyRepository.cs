@@ -40,11 +40,13 @@ public class AgencyRepository : IRepository
             .FirstOrDefaultAsync(x => x.Id == agencyId);
         return agency;
     }
+    
+
     /// Agency Update
-    public async Task<Agency?> UpdateAgency(int oldAgencyId, string newAgencyName)
+    public async Task<Agency?> UpdateAgency(int AgencyId, string newAgencyName)
     {
         var db = _dbContext;
-        var agencyToUpdate = await db.Agencies.FirstOrDefaultAsync(x => x.Id == oldAgencyId);
+        var agencyToUpdate = await db.Agencies.FirstOrDefaultAsync(x => x.Id == AgencyId);
         
         if (agencyToUpdate == null)
         {
@@ -72,9 +74,16 @@ public class AgencyRepository : IRepository
     public async Task CreatePropertyAsync(Property newProperty)
     {
         var db = _dbContext;
+        var agencyExists = await db.Agencies.FirstOrDefaultAsync(x => x.Id == newProperty.AgencyId);
+        if (agencyExists == null)
+        {
+            newProperty.AgencyId = null;
+        }
+        
         await db.Properties.AddAsync(newProperty);
         await db.SaveChangesAsync();
     }
+
     /// Property Read
     public async Task<List<Property>> GetAllPropertiesAsync()
     {
@@ -82,6 +91,7 @@ public class AgencyRepository : IRepository
         var properties = await db.Properties.Include(x => x.Address).ToListAsync();
         return properties;
     }
+
     /// Property Read
     public Task<Property?> GetPropertyByIdAsync(int propertyId)
     {
@@ -100,7 +110,7 @@ public class AgencyRepository : IRepository
         if (propertyToUpdate == null) return null;
 
         propertyToUpdate.Size = newProperty.Size;
-        propertyToUpdate.Address.Street = newProperty.Address.Street;
+        propertyToUpdate.Address!.Street = newProperty.Address!.Street;
         propertyToUpdate.Address.HouseNo = newProperty.Address.HouseNo;
         propertyToUpdate.Address.Zip = newProperty.Address.Zip;
         propertyToUpdate.Price = newProperty.Price;
