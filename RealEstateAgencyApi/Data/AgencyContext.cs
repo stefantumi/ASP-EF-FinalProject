@@ -37,6 +37,7 @@ public class AgencyContext : DbContext
     {
         // for use with docker 
         // optionsBuilder.UseSqlServer(@"Data Source=127.0.0.1;User Id=SA;Password=StefanTumi.7;Database=Agencydatabase;Trusted_Connection=false");
+        
         // for Windows with local sql server
         optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Agencydatabase1;Trusted_Connection=True;");
     }
